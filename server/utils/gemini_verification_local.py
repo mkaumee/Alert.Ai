@@ -115,7 +115,7 @@ with open("{image_path}", "rb") as f:
 image = PIL.Image.open(io.BytesIO(image_bytes))
 
 # Create model
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-3-flash')
 
 # Create prompt
 prompt = """Analyze this image carefully. Is there a real {emergency_type} emergency happening?
@@ -160,7 +160,7 @@ image_bytes = response.content
 image = PIL.Image.open(io.BytesIO(image_bytes))
 
 # Create model
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-3-flash')
 
 # Create prompt
 prompt = """Analyze this image carefully. Is there a real {emergency_type} emergency happening?
