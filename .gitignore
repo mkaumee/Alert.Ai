@@ -1,0 +1,30 @@
+# AlertAI - Minimal .gitignore
+# Only excluding files that should never be committed
+
+# Temporary files that are recreated automatically
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE temporary files (not settings)
+*.sublime-workspace
+.vscode/settings.json
+
+# Log files with sensitive data
+*.log
+
+# Note: We're keeping most files including:
+# - Virtual environments (server/venv/)
+# - Cache files (__pycache__/)
+# - Environment files (.env)
+# - Database files (*.db)
+# - All project files and dependencies
+# 
+# Large files are handled by Git LFS as configured in .gitattributes
