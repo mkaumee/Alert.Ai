@@ -8,6 +8,8 @@ DB_PATH = os.path.join(DB_DIR, 'database.db')
 
 def init_db():
     """Initialize the database and create tables if they don't exist"""
+    global DB_PATH
+    
     # Create db directory if it doesn't exist
     os.makedirs(DB_DIR, exist_ok=True)
     
@@ -55,7 +57,6 @@ def init_db():
         print(f"❌ Database initialization error: {e}")
         # Fallback to in-memory database if file system issues
         print("⚠️  Falling back to in-memory database")
-        global DB_PATH
         DB_PATH = ':memory:'
 
 def log_emergency_to_db(emergency_data, verified=True):
