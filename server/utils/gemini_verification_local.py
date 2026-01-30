@@ -100,14 +100,22 @@ class GeminiVerifier:
             # Create Python script for local file analysis
             script_content = f'''
 import os
-from google import genai
+import google.generativeai as genai
+import PIL.Image
+import io
 
-api_key = "{self.api_key}"
-client = genai.Client(api_key=api_key)
+# Configure API key
+genai.configure(api_key="{self.api_key}")
 
 # Read local image file
 with open("{image_path}", "rb") as f:
     image_bytes = f.read()
+
+# Convert to PIL Image
+image = PIL.Image.open(io.BytesIO(image_bytes))
+
+# Create model
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 # Create prompt
 prompt = """Analyze this image carefully. Is there a real {emergency_type} emergency happening?
@@ -118,14 +126,8 @@ Do not consider staged, fake, or unclear situations as emergencies.
 Respond with ONLY "YES" if this is clearly a real emergency requiring immediate response.
 Respond with ONLY "NO" if this is not an emergency, fake, unclear, or normal situation."""
 
-# Call Gemini with image
-response = client.models.generate_content(
-    model="gemini-2.5-flash",
-    contents=[
-        prompt,
-        {{"inline_data": {{"mime_type": "image/jpeg", "data": image_bytes.hex()}}}}
-    ]
-)
+# Generate content
+response = model.generate_content([prompt, image])
 
 print(response.text.strip())
 '''
@@ -142,16 +144,23 @@ print(response.text.strip())
             # Create Python script for URL analysis
             script_content = f'''
 import requests
-import base64
-from google import genai
+import google.generativeai as genai
+import PIL.Image
+import io
 
-api_key = "{self.api_key}"
-client = genai.Client(api_key=api_key)
+# Configure API key
+genai.configure(api_key="{self.api_key}")
 
 # Download image
 response = requests.get("{image_url}", timeout=15)
 response.raise_for_status()
 image_bytes = response.content
+
+# Convert to PIL Image
+image = PIL.Image.open(io.BytesIO(image_bytes))
+
+# Create model
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 # Create prompt
 prompt = """Analyze this image carefully. Is there a real {emergency_type} emergency happening?
@@ -162,14 +171,8 @@ Do not consider staged, fake, or unclear situations as emergencies.
 Respond with ONLY "YES" if this is clearly a real emergency requiring immediate response.
 Respond with ONLY "NO" if this is not an emergency, fake, unclear, or normal situation."""
 
-# Call Gemini with image
-response = client.models.generate_content(
-    model="gemini-2.5-flash",
-    contents=[
-        prompt,
-        {{"inline_data": {{"mime_type": "image/jpeg", "data": base64.b64encode(image_bytes).decode()}}}}
-    ]
-)
+# Generate content
+response = model.generate_content([prompt, image])
 
 print(response.text.strip())
 '''

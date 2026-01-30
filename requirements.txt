@@ -6,8 +6,9 @@ flask-cors==4.0.0
 python-dotenv==1.0.0
 gunicorn==21.2.0
 
-# Google Gemini - try without version constraint
-google-genai
+# Google Gemini - use stable library
+google-generativeai==0.8.3
+Pillow==10.0.0
 
 # Twilio for WhatsApp
 twilio==8.10.0
