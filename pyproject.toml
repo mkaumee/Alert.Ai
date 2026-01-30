@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alertai"
+version = "1.0.0"
+description = "AI-Powered Emergency Response System"
+requires-python = ">=3.8"
+dependencies = [
+    "Flask==3.0.0",
+    "requests==2.31.0",
+    "google-genai",
+    "flask-cors==4.0.0",
+    "python-dotenv==1.0.0",
+    "twilio==8.10.0",
+    "gunicorn==21.2.0",
+]
