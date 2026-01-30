@@ -124,7 +124,7 @@ Respond with ONLY "NO" if this is not an emergency, fake, unclear, or normal sit
 
 # Call Gemini
 result = client.models.generate_content(
-    model='gemini-3-flash',
+    model='gemini-2.5-flash',
     contents=[prompt, image_part]
 )
 
@@ -168,7 +168,7 @@ Respond with ONLY "NO" if this is not an emergency, fake, unclear, or normal sit
 
 # Call Gemini
 result = client.models.generate_content(
-    model='gemini-3-flash',
+    model='gemini-2.5-flash',
     contents=[prompt, image_part]
 )
 
