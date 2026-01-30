@@ -324,8 +324,77 @@ def test_whatsapp_integration():
 
 @app.route('/health', methods=['GET'])
 def health_check():
-    """Health check endpoint"""
-    return jsonify({'status': 'healthy', 'timestamp': datetime.now().isoformat()})
+    """Health check endpoint with database status"""
+    import sqlite3
+    from server.utils.db_utils import DB_PATH
+    
+    health_status = {
+        'status': 'healthy',
+        'timestamp': datetime.now().isoformat(),
+        'database': {
+            'status': 'unknown',
+            'path': DB_PATH,
+            'tables': []
+        }
+    }
+    
+    # Check database status
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        
+        # Check if tables exist
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = [table[0] for table in cursor.fetchall()]
+        health_status['database']['tables'] = tables
+        
+        # Check if required tables exist
+        required_tables = ['users', 'emergencies']
+        missing_tables = [table for table in required_tables if table not in tables]
+        
+        if missing_tables:
+            health_status['database']['status'] = 'missing_tables'
+            health_status['database']['missing'] = missing_tables
+            health_status['status'] = 'degraded'
+        else:
+            # Test table access
+            cursor.execute("SELECT COUNT(*) FROM users")
+            user_count = cursor.fetchone()[0]
+            cursor.execute("SELECT COUNT(*) FROM emergencies")
+            emergency_count = cursor.fetchone()[0]
+            
+            health_status['database']['status'] = 'healthy'
+            health_status['database']['counts'] = {
+                'users': user_count,
+                'emergencies': emergency_count
+            }
+        
+        conn.close()
+        
+    except Exception as e:
+        health_status['database']['status'] = 'error'
+        health_status['database']['error'] = str(e)
+        health_status['status'] = 'unhealthy'
+    
+    return jsonify(health_status)
+
+@app.route('/init-db', methods=['POST'])
+def manual_init_db():
+    """Manual database initialization endpoint"""
+    try:
+        from server.utils.db_utils import init_db
+        init_db()
+        return jsonify({
+            'status': 'success',
+            'message': 'Database initialized successfully',
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Database initialization failed: {str(e)}',
+            'timestamp': datetime.now().isoformat()
+        }), 500
 
 # =============================================================================
 # CPR MONITOR INTEGRATION

@@ -10,14 +10,21 @@ def init_db():
     """Initialize the database and create tables if they don't exist"""
     global DB_PATH
     
+    print(f"🔧 Initializing database at: {DB_PATH}")
+    
     # Create db directory if it doesn't exist
-    os.makedirs(DB_DIR, exist_ok=True)
+    try:
+        os.makedirs(DB_DIR, exist_ok=True)
+        print(f"📁 Database directory created/verified: {DB_DIR}")
+    except Exception as e:
+        print(f"⚠️  Could not create db directory: {e}")
     
     # Ensure database file is writable
     try:
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         
+        print("🔧 Creating emergencies table...")
         # Create emergencies table
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS emergencies (
@@ -34,6 +41,7 @@ def init_db():
             )
         ''')
         
+        print("🔧 Creating users table...")
         # Create users table for web app registrations
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
@@ -49,15 +57,114 @@ def init_db():
             )
         ''')
         
+        # Verify tables were created
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = cursor.fetchall()
+        print(f"📋 Tables in database: {[table[0] for table in tables]}")
+        
         conn.commit()
         conn.close()
         print(f"✅ Database initialized successfully at: {DB_PATH}")
         
+        # Test database connection
+        test_conn = sqlite3.connect(DB_PATH)
+        test_cursor = test_conn.cursor()
+        test_cursor.execute("SELECT COUNT(*) FROM users")
+        user_count = test_cursor.fetchone()[0]
+        test_cursor.execute("SELECT COUNT(*) FROM emergencies")
+        emergency_count = test_cursor.fetchone()[0]
+        test_conn.close()
+        print(f"📊 Database status - Users: {user_count}, Emergencies: {emergency_count}")
+        
     except Exception as e:
         print(f"❌ Database initialization error: {e}")
-        # Fallback to in-memory database if file system issues
-        print("⚠️  Falling back to in-memory database")
-        DB_PATH = ':memory:'
+        print(f"❌ Error type: {type(e).__name__}")
+        import traceback
+        print(f"❌ Full traceback: {traceback.format_exc()}")
+        
+        # For Railway, try using /tmp directory which is writable
+        print("⚠️  Trying /tmp directory for database...")
+        try:
+            DB_PATH = '/tmp/database.db'
+            conn = sqlite3.connect(DB_PATH)
+            cursor = conn.cursor()
+            
+            # Create tables in /tmp
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS emergencies (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    emergency_type TEXT NOT NULL,
+                    lat REAL NOT NULL,
+                    lon REAL NOT NULL,
+                    image_url TEXT NOT NULL,
+                    timestamp DATETIME NOT NULL,
+                    building TEXT NOT NULL,
+                    floor_affected TEXT,
+                    gemini_verified BOOLEAN DEFAULT 0,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            ''')
+            
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS users (
+                    user_id TEXT PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    phone TEXT NOT NULL,
+                    email TEXT NOT NULL,
+                    lat REAL NOT NULL,
+                    lon REAL NOT NULL,
+                    accuracy REAL,
+                    registered_at DATETIME NOT NULL,
+                    last_updated DATETIME NOT NULL
+                )
+            ''')
+            
+            conn.commit()
+            conn.close()
+            print(f"✅ Database initialized in /tmp at: {DB_PATH}")
+            
+        except Exception as tmp_error:
+            print(f"❌ /tmp database also failed: {tmp_error}")
+            # Final fallback to in-memory database
+            print("⚠️  Falling back to in-memory database")
+            DB_PATH = ':memory:'
+            
+            # Initialize in-memory database
+            conn = sqlite3.connect(DB_PATH)
+            cursor = conn.cursor()
+            
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS emergencies (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    emergency_type TEXT NOT NULL,
+                    lat REAL NOT NULL,
+                    lon REAL NOT NULL,
+                    image_url TEXT NOT NULL,
+                    timestamp DATETIME NOT NULL,
+                    building TEXT NOT NULL,
+                    floor_affected TEXT,
+                    gemini_verified BOOLEAN DEFAULT 0,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            ''')
+            
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS users (
+                    user_id TEXT PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    phone TEXT NOT NULL,
+                    email TEXT NOT NULL,
+                    lat REAL NOT NULL,
+                    lon REAL NOT NULL,
+                    accuracy REAL,
+                    registered_at DATETIME NOT NULL,
+                    last_updated DATETIME NOT NULL
+                )
+            ''')
+            
+            conn.commit()
+            # Don't close in-memory connection - keep it alive
+            print("⚠️  In-memory database initialized (data will not persist)")
 
 def log_emergency_to_db(emergency_data, verified=True):
     """
