@@ -100,8 +100,7 @@ class GeminiVerifier:
             # Create Python script for local file analysis
             script_content = f'''
 import os
-import google.genai as genai
-from google.genai.types import Part
+from google import genai
 
 api_key = "{self.api_key}"
 client = genai.Client(api_key=api_key)
@@ -109,9 +108,6 @@ client = genai.Client(api_key=api_key)
 # Read local image file
 with open("{image_path}", "rb") as f:
     image_bytes = f.read()
-
-# Create image part
-image_part = Part.from_bytes(data=image_bytes, mime_type='image/jpeg')
 
 # Create prompt
 prompt = """Analyze this image carefully. Is there a real {emergency_type} emergency happening?
@@ -122,13 +118,16 @@ Do not consider staged, fake, or unclear situations as emergencies.
 Respond with ONLY "YES" if this is clearly a real emergency requiring immediate response.
 Respond with ONLY "NO" if this is not an emergency, fake, unclear, or normal situation."""
 
-# Call Gemini
-result = client.models.generate_content(
-    model='gemini-2.5-flash',
-    contents=[prompt, image_part]
+# Call Gemini with image
+response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents=[
+        prompt,
+        {{"inline_data": {{"mime_type": "image/jpeg", "data": image_bytes.hex()}}}}
+    ]
 )
 
-print(result.text.strip())
+print(response.text.strip())
 '''
             
             return self._execute_gemini_script(script_content)
@@ -143,8 +142,8 @@ print(result.text.strip())
             # Create Python script for URL analysis
             script_content = f'''
 import requests
-import google.genai as genai
-from google.genai.types import Part
+import base64
+from google import genai
 
 api_key = "{self.api_key}"
 client = genai.Client(api_key=api_key)
@@ -153,9 +152,6 @@ client = genai.Client(api_key=api_key)
 response = requests.get("{image_url}", timeout=15)
 response.raise_for_status()
 image_bytes = response.content
-
-# Create image part
-image_part = Part.from_bytes(data=image_bytes, mime_type='image/jpeg')
 
 # Create prompt
 prompt = """Analyze this image carefully. Is there a real {emergency_type} emergency happening?
@@ -166,13 +162,16 @@ Do not consider staged, fake, or unclear situations as emergencies.
 Respond with ONLY "YES" if this is clearly a real emergency requiring immediate response.
 Respond with ONLY "NO" if this is not an emergency, fake, unclear, or normal situation."""
 
-# Call Gemini
-result = client.models.generate_content(
-    model='gemini-2.5-flash',
-    contents=[prompt, image_part]
+# Call Gemini with image
+response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents=[
+        prompt,
+        {{"inline_data": {{"mime_type": "image/jpeg", "data": base64.b64encode(image_bytes).decode()}}}}
+    ]
 )
 
-print(result.text.strip())
+print(response.text.strip())
 '''
             
             return self._execute_gemini_script(script_content)
