@@ -276,19 +276,18 @@ class FireEmergencyAgent:
                 
                 # Create Python script for Gemini API call
                 script_content = f'''
-import google.genai as genai
+import google.generativeai as genai
 import time
 
 api_key = "{self.api_key}"
-client = genai.Client(api_key=api_key)
+genai.configure(api_key=api_key)
+
+model = genai.GenerativeModel('gemini-3-flash')
 
 prompt = """{context_prompt}"""
 
 try:
-    result = client.models.generate_content(
-        model='gemini-3-flash-preview',
-        contents=[prompt]
-    )
+    result = model.generate_content(prompt)
     print(result.text.strip())
 except Exception as e:
     print(f"GEMINI_ERROR: {{str(e)}}")

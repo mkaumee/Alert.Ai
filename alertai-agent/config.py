@@ -23,7 +23,7 @@ class AlertAIAgentConfig:
     AGENT_VERSION = "1.0.0"
     
     # AI Model Configuration - prioritize .env file over system environment
-    AI_MODEL = "gemini-3-flash-preview"
+    AI_MODEL = "gemini-3-flash"
     AI_API_KEY = env_values.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY", "")
     GEMINI_API_KEY = AI_API_KEY  # Alias for backward compatibility
     
