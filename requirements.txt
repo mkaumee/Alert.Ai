@@ -1,17 +1,23 @@
 # AlertAI Combined Requirements for Railway Deployment
-# Server Dependencies
-Flask==2.3.3
+# Python 3.11 compatible versions
+Flask==3.0.0
 requests==2.31.0
 google-genai>=1.60.0
-flask-cors
+flask-cors==4.0.0
 python-dotenv==1.0.0
 twilio==8.10.0
 
-# Agent Dependencies
-flask-socketio
-python-socketio
-websockets
-numpy==1.24.3
+# Agent Dependencies - Python 3.11 compatible
+flask-socketio==5.3.6
+python-socketio==5.10.0
+websockets==12.0
+
+# NumPy - Python 3.11 compatible version
+numpy==1.25.2
 
 # Additional utilities for deployment
 gunicorn==21.2.0
+
+# Essential packages for Python 3.11
+setuptools>=68.0.0
+wheel>=0.41.0
