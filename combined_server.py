@@ -634,21 +634,25 @@ def serve_test_images(filename):
         return f"Test image not found: {filename}", 404
 
 if __name__ == '__main__':
+    # Railway deployment configuration
+    port = int(os.environ.get("PORT", 8000))
+    debug_mode = os.environ.get("FLASK_ENV", "production") == "development"
+    
     print("🚀 STARTING COMBINED ALERTAI SERVER")
     print("=" * 60)
-    print("🌐 Web App: http://localhost:8000")
-    print("📡 API Server: http://localhost:8000/api/")
-    print("🔍 Health Check: http://localhost:8000/health")
+    print(f"🌐 Web App: http://0.0.0.0:{port}")
+    print(f"📡 API Server: http://0.0.0.0:{port}/api/")
+    print(f"🔍 Health Check: http://0.0.0.0:{port}/health")
     print("=" * 60)
     print("📝 FEATURES:")
     print("✅ Web App (AlertAI interface)")
     print("✅ API Server (Emergency alerts)")
     print("✅ Gemini Verification")
     print("✅ Fire Dataset Images")
-    print("✅ Single ngrok tunnel support")
+    print("✅ Railway deployment ready")
     print("=" * 60)
-    print("🔗 For ngrok: ngrok http 8000")
-    print("🌍 Then access via: https://your-ngrok-url.ngrok.io")
+    print(f"🚀 Environment: {'Development' if debug_mode else 'Production'}")
+    print(f"🔌 Port: {port}")
     print("=" * 60)
     
-    app.run(debug=True, host='0.0.0.0', port=8000)
+    app.run(debug=debug_mode, host='0.0.0.0', port=port)
