@@ -1,0 +1,19 @@
+# YOLO Fire Detection Requirements
+# Core dependencies
+opencv-python>=4.5.0
+numpy>=1.21.0
+requests>=2.25.0
+
+# YOLO model support (choose one or both)
+ultralytics>=8.0.0          # For YOLOv8/v5 (.pt files)
+torch>=1.9.0                # Required by ultralytics
+torchvision>=0.10.0         # Required by ultralytics
+
+# Optional: For YOLOv4/v3 with OpenCV DNN
+# No additional packages needed - uses opencv-python
+
+# Image processing
+Pillow>=8.0.0
+
+# Utilities
+pathlib2>=2.3.0            # For Python < 3.4 compatibility

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPR Safari Fix Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+            line-height: 1.6;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success { color: #28a745; font-weight: bold; }
+        .error { color: #dc3545; font-weight: bold; }
+        .info { color: #007bff; font-weight: bold; }
+        .warning { color: #ffc107; font-weight: bold; }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 8px 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .debug-log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-success { background: #28a745; }
+        .status-error { background: #dc3545; }
+        .status-warning { background: #ffc107; }
+        .status-info { background: #007bff; }
+        
+        h1 { color: #333; }
+        h3 { color: #555; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <h1>🚑 CPR Safari Fix Test</h1>
+    <p>This page tests the Safari-compatible CPR monitor functionality.</p>
+    
+    <div class="test-section">
+        <h3>📱 Browser Information</h3>
+        <div id="browser-info">Loading...</div>
+    </div>
+    
+    <div class="test-section">
+        <h3>🔧 JavaScript Compatibility Test</h3>
+        <div id="js-compatibility">Testing...</div>
+    </div>
+    
+    <div class="test-section">
+        <h3>📦 CPR Monitor Object Test</h3>
+        <div id="cpr-object-test">Testing...</div>
+        <button onclick="testCPRObject()">Test CPR Object</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>📷 Camera API Test</h3>
+        <div id="camera-test">Ready to test</div>
+        <button onclick="testCameraAPI()">Test Camera Access</button>
+        <button onclick="stopCameraTest()" disabled id="stop-camera-btn">Stop Camera</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>🔊 Audio API Test</h3>
+        <div id="audio-test">Ready to test</div>
+        <button onclick="testAudioAPI()">Test Audio Beep</button>
+        <button onclick="testMetronome()">Test Metronome</button>
+        <button onclick="stopMetronome()" disabled id="stop-metronome-btn">Stop Metronome</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>🗣️ Speech API Test</h3>
+        <div id="speech-test">Ready to test</div>
+        <button onclick="testSpeechAPI()">Test Speech</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>🚀 Full CPR Monitor Test</h3>
+        <div id="full-test">Ready to test</div>
+        <button onclick="testFullCPRMonitor()">Launch CPR Monitor</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>📋 Debug Log</h3>
+        <div class="debug-log" id="debug-log">Debug messages will appear here...</div>
+        <button onclick="clearDebugLog()">Clear Log</button>
+    </div>
+
+    <!-- Load the Safari-compatible CPR monitor -->
+    <script src="cpr-monitor/cpr-monitor-simple.js"></script>
+
+    <script>
+        // Debug logging system
+        function addDebug(message) {
+            var debugLog = document.getElementById('debug-log');
+            var timestamp = new Date().toLocaleTimeString();
+            debugLog.innerHTML += '<div>[' + timestamp + '] ' + message + '</div>';
+            debugLog.scrollTop = debugLog.scrollHeight;
+            console.log('[Debug] ' + message);
+        }
+        
+        // Make addDebug available globally for CPR monitor
+        window.addDebug = addDebug;
+        
+        function clearDebugLog() {
+            document.getElementById('debug-log').innerHTML = 'Debug log cleared...<br>';
+        }
+        
+        function setStatus(elementId, status, message) {
+            var element = document.getElementById(elementId);
+            var statusClass = 'status-' + status;
+            var textClass = status;
+            
+            element.innerHTML = '<span class="status-indicator ' + statusClass + '"></span>' +
+                               '<span class="' + textClass + '">' + message + '</span>';
+        }
+        
+        // Browser information
+        function displayBrowserInfo() {
+            var info = document.getElementById('browser-info');
+            var userAgent = navigator.userAgent;
+            var isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+            var isIOS = /iPad|iPhone|iPod/.test(userAgent);
+            var isMobile = /Mobi|Android/i.test(userAgent);
+            
+            info.innerHTML = 
+                '<strong>User Agent:</strong> ' + userAgent + '<br>' +
+                '<strong>Safari:</strong> ' + (isSafari ? 'Yes' : 'No') + '<br>' +
+                '<strong>iOS:</strong> ' + (isIOS ? 'Yes' : 'No') + '<br>' +
+                '<strong>Mobile:</strong> ' + (isMobile ? 'Yes' : 'No') + '<br>' +
+                '<strong>Screen:</strong> ' + screen.width + 'x' + screen.height + '<br>' +
+                '<strong>Viewport:</strong> ' + window.innerWidth + 'x' + window.innerHeight;
+        }
+        
+        // JavaScript compatibility test
+        function testJSCompatibility() {
+            var results = [];
+            
+            // Test basic features
+            try {
+                // Test Promise support
+                if (typeof Promise !== 'undefined') {
+                    results.push('✅ Promise support');
+                } else {
+                    results.push('❌ No Promise support');
+                }
+                
+                // Test MediaDevices API
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    results.push('✅ getUserMedia API');
+                } else {
+                    results.push('❌ No getUserMedia API');
+                }
+                
+                // Test AudioContext
+                var AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    results.push('✅ AudioContext API');
+                } else {
+                    results.push('❌ No AudioContext API');
+                }
+                
+                // Test SpeechSynthesis
+                if (window.speechSynthesis) {
+                    results.push('✅ SpeechSynthesis API');
+                } else {
+                    results.push('❌ No SpeechSynthesis API');
+                }
+                
+                document.getElementById('js-compatibility').innerHTML = results.join('<br>');
+                
+            } catch (error) {
+                setStatus('js-compatibility', 'error', 'JavaScript compatibility test failed: ' + error.message);
+            }
+        }
+        
+        // Test CPR object
+        function testCPRObject() {
+            addDebug('Testing CPR Monitor object...');
+            
+            try {
+                if (typeof window.CPRMonitor === 'object') {
+                    var methods = ['show', 'start', 'stop', 'debug'];
+                    var results = ['✅ CPRMonitor object exists'];
+                    
+                    methods.forEach(function(method) {
+                        if (typeof window.CPRMonitor[method] === 'function') {
+                            results.push('✅ CPRMonitor.' + method + '() method exists');
+                        } else {
+                            results.push('❌ CPRMonitor.' + method + '() method missing');
+                        }
+                    });
+                    
+                    // Test debug method
+                    try {
+                        window.CPRMonitor.debug();
+                        results.push('✅ CPRMonitor.debug() executed successfully');
+                    } catch (error) {
+                        results.push('❌ CPRMonitor.debug() failed: ' + error.message);
+                    }
+                    
+                    document.getElementById('cpr-object-test').innerHTML = results.join('<br>');
+                    addDebug('CPR Monitor object test completed');
+                    
+                } else {
+                    setStatus('cpr-object-test', 'error', 'CPRMonitor object not found');
+                    addDebug('ERROR: CPRMonitor object not found');
+                }
+                
+            } catch (error) {
+                setStatus('cpr-object-test', 'error', 'CPR object test failed: ' + error.message);
+                addDebug('ERROR: CPR object test failed - ' + error.message);
+            }
+        }
+        
+        // Test camera API
+        var testStream = null;
+        function testCameraAPI() {
+            addDebug('Testing camera API...');
+            setStatus('camera-test', 'info', 'Requesting camera access...');
+            
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                setStatus('camera-test', 'error', 'Camera API not supported');
+                addDebug('ERROR: Camera API not supported');
+                return;
+            }
+            
+            navigator.mediaDevices.getUserMedia({
+                video: { facingMode: "user" },
+                audio: false
+            })
+            .then(function(stream) {
+                testStream = stream;
+                setStatus('camera-test', 'success', 'Camera access granted! Stream active.');
+                addDebug('SUCCESS: Camera access granted');
+                
+                document.getElementById('stop-camera-btn').disabled = false;
+                
+                // Show video info
+                var videoTracks = stream.getVideoTracks();
+                if (videoTracks.length > 0) {
+                    var settings = videoTracks[0].getSettings();
+                    addDebug('Video track settings: ' + JSON.stringify(settings));
+                }
+            })
+            .catch(function(error) {
+                setStatus('camera-test', 'error', 'Camera access denied: ' + error.message);
+                addDebug('ERROR: Camera access denied - ' + error.message);
+            });
+        }
+        
+        function stopCameraTest() {
+            if (testStream) {
+                testStream.getTracks().forEach(function(track) {
+                    track.stop();
+                });
+                testStream = null;
+                setStatus('camera-test', 'info', 'Camera stopped');
+                addDebug('Camera test stream stopped');
+                document.getElementById('stop-camera-btn').disabled = true;
+            }
+        }
+        
+        // Test audio API
+        var testAudioCtx = null;
+        var testMetronomeInterval = null;
+        
+        function testAudioAPI() {
+            addDebug('Testing audio API...');
+            
+            try {
+                var AudioContext = window.AudioContext || window.webkitAudioContext;
+                testAudioCtx = new AudioContext();
+                
+                var oscillator = testAudioCtx.createOscillator();
+                var gainNode = testAudioCtx.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(testAudioCtx.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, testAudioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, testAudioCtx.currentTime + 0.2);
+                
+                oscillator.start(testAudioCtx.currentTime);
+                oscillator.stop(testAudioCtx.currentTime + 0.2);
+                
+                setStatus('audio-test', 'success', 'Audio beep played successfully');
+                addDebug('SUCCESS: Audio beep played');
+                
+            } catch (error) {
+                setStatus('audio-test', 'error', 'Audio test failed: ' + error.message);
+                addDebug('ERROR: Audio test failed - ' + error.message);
+            }
+        }
+        
+        function testMetronome() {
+            addDebug('Testing metronome...');
+            
+            if (testMetronomeInterval) {
+                clearInterval(testMetronomeInterval);
+            }
+            
+            try {
+                var AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!testAudioCtx) {
+                    testAudioCtx = new AudioContext();
+                }
+                
+                var beepCount = 0;
+                testMetronomeInterval = setInterval(function() {
+                    try {
+                        var oscillator = testAudioCtx.createOscillator();
+                        var gainNode = testAudioCtx.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(testAudioCtx.destination);
+                        
+                        oscillator.frequency.value = 800;
+                        oscillator.type = 'sine';
+                        
+                        gainNode.gain.setValueAtTime(0.3, testAudioCtx.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, testAudioCtx.currentTime + 0.1);
+                        
+                        oscillator.start(testAudioCtx.currentTime);
+                        oscillator.stop(testAudioCtx.currentTime + 0.1);
+                        
+                        beepCount++;
+                        setStatus('audio-test', 'success', 'Metronome active - Beep #' + beepCount);
+                        
+                    } catch (error) {
+                        addDebug('ERROR: Metronome beep failed - ' + error.message);
+                    }
+                }, 545); // 110 BPM
+                
+                document.getElementById('stop-metronome-btn').disabled = false;
+                addDebug('SUCCESS: Metronome started at 110 BPM');
+                
+            } catch (error) {
+                setStatus('audio-test', 'error', 'Metronome test failed: ' + error.message);
+                addDebug('ERROR: Metronome test failed - ' + error.message);
+            }
+        }
+        
+        function stopMetronome() {
+            if (testMetronomeInterval) {
+                clearInterval(testMetronomeInterval);
+                testMetronomeInterval = null;
+                setStatus('audio-test', 'info', 'Metronome stopped');
+                addDebug('Metronome stopped');
+                document.getElementById('stop-metronome-btn').disabled = true;
+            }
+        }
+        
+        // Test speech API
+        function testSpeechAPI() {
+            addDebug('Testing speech API...');
+            
+            if (!window.speechSynthesis) {
+                setStatus('speech-test', 'error', 'Speech synthesis not supported');
+                addDebug('ERROR: Speech synthesis not supported');
+                return;
+            }
+            
+            try {
+                var utterance = new SpeechSynthesisUtterance('CPR Monitor speech test successful. Audio is working correctly.');
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                utterance.volume = 0.8;
+                utterance.lang = 'en-US';
+                
+                utterance.onstart = function() {
+                    setStatus('speech-test', 'info', 'Speech synthesis started...');
+                    addDebug('Speech synthesis started');
+                };
+                
+                utterance.onend = function() {
+                    setStatus('speech-test', 'success', 'Speech synthesis completed successfully');
+                    addDebug('SUCCESS: Speech synthesis completed');
+                };
+                
+                utterance.onerror = function(event) {
+                    setStatus('speech-test', 'error', 'Speech synthesis error: ' + event.error);
+                    addDebug('ERROR: Speech synthesis error - ' + event.error);
+                };
+                
+                window.speechSynthesis.speak(utterance);
+                
+            } catch (error) {
+                setStatus('speech-test', 'error', 'Speech test failed: ' + error.message);
+                addDebug('ERROR: Speech test failed - ' + error.message);
+            }
+        }
+        
+        // Test full CPR monitor
+        function testFullCPRMonitor() {
+            addDebug('Testing full CPR monitor...');
+            
+            if (!window.CPRMonitor) {
+                setStatus('full-test', 'error', 'CPRMonitor object not available');
+                addDebug('ERROR: CPRMonitor object not available');
+                return;
+            }
+            
+            try {
+                // Open CPR monitor in new window/tab
+                var cprWindow = window.open('/cpr-monitor', 'CPRMonitor', 'width=800,height=600');
+                
+                if (cprWindow) {
+                    setStatus('full-test', 'success', 'CPR Monitor opened in new window');
+                    addDebug('SUCCESS: CPR Monitor opened in new window');
+                } else {
+                    setStatus('full-test', 'warning', 'Popup blocked. Please allow popups and try again.');
+                    addDebug('WARNING: Popup blocked');
+                }
+                
+            } catch (error) {
+                setStatus('full-test', 'error', 'Failed to open CPR monitor: ' + error.message);
+                addDebug('ERROR: Failed to open CPR monitor - ' + error.message);
+            }
+        }
+        
+        // Initialize tests when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            addDebug('Page loaded, initializing tests...');
+            displayBrowserInfo();
+            testJSCompatibility();
+            
+            // Auto-test CPR object after a short delay
+            setTimeout(function() {
+                testCPRObject();
+            }, 500);
+            
+            addDebug('All automatic tests completed');
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            stopCameraTest();
+            stopMetronome();
+        });
+    </script>
+</body>
+</html>

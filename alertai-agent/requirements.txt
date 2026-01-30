@@ -1,0 +1,23 @@
+# AlertAI Agent Dependencies - Live Gemini API
+flask==2.3.3
+requests==2.31.0
+
+# Latest Gemini with Interactive API (December 2024)
+google-genai>=1.60.0
+
+# Environment variables
+python-dotenv==1.0.0
+
+flask-cors
+flask-socketio
+python-socketio
+websockets
+
+# Speech and Vision (optional - for future audio integration)
+# speechrecognition==3.10.0
+# pyttsx3==2.90
+# opencv-python==4.8.1.78
+# pyaudio==0.2.11
+
+# Additional utilities
+numpy==1.24.3

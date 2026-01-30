@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlertAI - Emergency Alert System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h1>AlertAI</h1>
+            </div>
+            <div class="status-indicator">
+                <span class="status-dot" id="connectionStatus"></span>
+                <span id="statusText">Connecting...</span>
+            </div>
+        </header>
+
+        <!-- User Registration -->
+        <div class="registration-panel" id="registrationPanel">
+            <div class="card">
+                <h2><i class="fas fa-user-plus"></i> Register for Emergency Alerts</h2>
+                <form id="registrationForm">
+                    <div class="form-group">
+                        <label for="userName">Full Name</label>
+                        <input type="text" id="userName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userPhone">Phone Number</label>
+                        <input type="tel" id="userPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Email Address</label>
+                        <input type="email" id="userEmail" required>
+                    </div>
+                    <div class="location-section">
+                        <h3><i class="fas fa-map-marker-alt"></i> Location Access</h3>
+                        <p>We need your location to send you relevant emergency alerts within 100 meters.</p>
+                        <button type="button" id="enableLocation" class="location-btn">
+                            <i class="fas fa-crosshairs"></i> Enable Location Access
+                        </button>
+                        <div id="locationStatus" class="location-status"></div>
+                    </div>
+                    <button type="submit" class="register-btn" disabled id="registerBtn">
+                        <i class="fas fa-bell"></i> Register for Alerts
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div class="dashboard" id="dashboard" style="display: none;">
+            <!-- User Info -->
+            <div class="user-info">
+                <div class="card">
+                    <h3><i class="fas fa-user"></i> User Profile</h3>
+                    <div class="user-details">
+                        <p><strong>Name:</strong> <span id="displayName"></span></p>
+                        <p><strong>Phone:</strong> <span id="displayPhone"></span></p>
+                        <p><strong>Location:</strong> <span id="displayLocation">Getting location...</span></p>
+                        <p><strong>Alert Radius:</strong> 100 meters</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emergency Types -->
+            <div class="emergency-types">
+                <div class="card">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Emergency Types We Monitor</h3>
+                    <div class="emergency-grid">
+                        <div class="emergency-type fire">
+                            <i class="fas fa-fire"></i>
+                            <span>Fire Detection</span>
+                        </div>
+                        <div class="emergency-type accident">
+                            <i class="fas fa-car-crash"></i>
+                            <span>Accident Detection</span>
+                        </div>
+                        <div class="emergency-type smoke">
+                            <i class="fas fa-smog"></i>
+                            <span>Smoke Detection</span>
+                        </div>
+                        <div class="emergency-type fallen">
+                            <i class="fas fa-user-injured"></i>
+                            <span>Fallen Person</span>
+                        </div>
+                        <div class="emergency-type weapon">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Weapon Detection</span>
+                        </div>
+                        <div class="emergency-type blood">
+                            <i class="fas fa-tint"></i>
+                            <span>Blood Detection</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emergency Simulation Panel -->
+            <div class="emergency-simulation">
+                <div class="card">
+                    <h3><i class="fas fa-flask"></i> Emergency Simulation (Testing)</h3>
+                    <p class="simulation-description">Simulate different emergency types to test the AlertAI system</p>
+                    <div class="simulation-buttons">
+                        <button class="sim-btn fire-sim" onclick="simulateEmergency('Fire')">
+                            <i class="fas fa-fire"></i>
+                            <span>Fire Emergency</span>
+                        </button>
+                        <button class="sim-btn smoke-sim" onclick="simulateEmergency('Smoke')">
+                            <i class="fas fa-smog"></i>
+                            <span>Smoke Emergency</span>
+                        </button>
+                        <button class="sim-btn accident-sim" onclick="simulateEmergency('Accident')">
+                            <i class="fas fa-car-crash"></i>
+                            <span>Accident Emergency</span>
+                        </button>
+                        <button class="sim-btn fallen-sim" onclick="simulateEmergency('Fallen Person')">
+                            <i class="fas fa-user-injured"></i>
+                            <span>Fallen Person</span>
+                        </button>
+                        <button class="sim-btn gun-sim" onclick="simulateEmergency('Gun')">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Gun Emergency</span>
+                        </button>
+                        <button class="sim-btn blood-sim" onclick="simulateEmergency('Blood')">
+                            <i class="fas fa-tint"></i>
+                            <span>Blood Emergency</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Alerts -->
+            <div class="active-alerts">
+                <div class="card">
+                    <h3><i class="fas fa-bell"></i> Active Emergency Alerts</h3>
+                    <div id="alertsList" class="alerts-list">
+                        <div class="no-alerts">
+                            <i class="fas fa-check-circle"></i>
+                            <p>No active emergencies in your area</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Alerts History -->
+            <div class="alert-history">
+                <div class="card">
+                    <h3><i class="fas fa-history"></i> Recent Alert History</h3>
+                    <div id="historyList" class="history-list">
+                        <p class="no-history">No previous alerts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Alert Modal -->
+        <div class="alert-modal" id="alertModal">
+            <div class="alert-content">
+                <div class="alert-header">
+                    <div class="alert-icon" id="alertIcon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h2 id="alertTitle">EMERGENCY ALERT</h2>
+                </div>
+                <div class="alert-body">
+                    <div class="alert-info">
+                        <p class="alert-type" id="alertType"></p>
+                        <p class="alert-location" id="alertLocation"></p>
+                        <p class="alert-distance" id="alertDistance"></p>
+                        <p class="alert-time" id="alertTime"></p>
+                    </div>
+                    <div class="alert-message" id="alertMessage"></div>
+                </div>
+                <div class="alert-actions">
+                    <div class="emergency-notification">
+                        <i class="fas fa-check-circle"></i> Emergency services have been notified
+                    </div>
+                    <div class="button-row">
+                        <button class="guidance-agent-btn" onclick="startGuidanceAgent()" id="guidanceAgentBtn">
+                            <i class="fas fa-robot"></i> Start Fire Safety Agent
+                        </button>
+                        <button class="acknowledge-btn" onclick="acknowledgeAlert()">
+                            <i class="fas fa-check"></i> Acknowledge Alert
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Force fresh JavaScript load -->
+    <script>
+        // Clear any cached data
+        if ('caches' in window) {
+            caches.keys().then(names => {
+                names.forEach(name => {
+                    caches.delete(name);
+                });
+            });
+        }
+    </script>
+    <script src="config.js"></script>
+    <script src="app.js?v=20260123-fixed"></script>
+</body>
+</html>
+</text>

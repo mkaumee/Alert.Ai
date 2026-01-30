@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test AlertAI Guidance Agents</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .agent-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        .agent-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .agent-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .agent-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+        .fire { color: #e74c3c; }
+        .blood { color: #c0392b; }
+        .smoke { color: #95a5a6; }
+        .medical { color: #f39c12; }
+        .security { color: #8e44ad; }
+        .info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+        }
+        .info h3 {
+            margin-bottom: 15px;
+        }
+        .info ul {
+            margin-left: 20px;
+        }
+        .info li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AlertAI Guidance Agents</h1>
+        <p>Click on any emergency type to test the guidance interface</p>
+        
+        <div class="agent-grid">
+            <div class="agent-card" onclick="openGuidance('Fire')">
+                <div class="agent-icon fire">🔥</div>
+                <div class="agent-title">Fire Safety Agent</div>
+                <div class="agent-desc">Expert fire suppression and evacuation guidance with PASS technique and building-specific safety data</div>
+            </div>
+            
+            <div class="agent-card" onclick="openGuidance('Blood')">
+                <div class="agent-icon blood">🩸</div>
+                <div class="agent-title">Trauma Response Agent</div>
+                <div class="agent-desc">Specialized bleeding control and trauma response with medical protocols and shock prevention</div>
+            </div>
+            
+            <div class="agent-card" onclick="openGuidance('Smoke')">
+                <div class="agent-icon smoke">💨</div>
+                <div class="agent-title">Smoke Safety Agent</div>
+                <div class="agent-desc">Smoke evacuation and breathing safety with visibility management and clean air zones</div>
+            </div>
+            
+            <div class="agent-card" onclick="openGuidance('Fallen Person')">
+                <div class="agent-icon medical">🏥</div>
+                <div class="agent-title">Medical Response Agent</div>
+                <div class="agent-desc">Medical assessment and first aid guidance with spinal injury protocols and emergency positioning</div>
+            </div>
+            
+            <div class="agent-card" onclick="openGuidance('Gun')">
+                <div class="agent-icon security">🛡️</div>
+                <div class="agent-title">Security Response Agent</div>
+                <div class="agent-desc">Security protocols and lockdown procedures with RUN-HIDE-FIGHT guidance and threat assessment</div>
+            </div>
+        </div>
+        
+        <div class="info">
+            <h3>🎯 Features</h3>
+            <ul>
+                <li><strong>Speech-to-Text:</strong> Voice input with iOS compatibility</li>
+                <li><strong>Text-to-Speech:</strong> Agent responses with visual speaking indicator</li>
+                <li><strong>Glowing Avatar:</strong> Visual feedback when agent is speaking</li>
+                <li><strong>Conversation History:</strong> Track the guidance session</li>
+                <li><strong>Emergency-Specific:</strong> Specialized knowledge for each emergency type</li>
+                <li><strong>Mobile Responsive:</strong> Works on all devices</li>
+                <li><strong>Accessibility:</strong> High contrast and reduced motion support</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function openGuidance(emergencyType) {
+            const guidanceUrl = `guidance.html?type=${encodeURIComponent(emergencyType)}&building=Medical Center Building A&floor=1st Floor`;
+            
+            // Open in new window for better experience
+            const guidanceWindow = window.open(guidanceUrl, 'AlertAI_Guidance', 'width=1200,height=800,scrollbars=no,resizable=yes');
+            
+            if (guidanceWindow) {
+                guidanceWindow.focus();
+            } else {
+                alert('Please allow popups to open the guidance interface, or manually navigate to:\n\n' + guidanceUrl);
+            }
+        }
+    </script>
+</body>
+</html>

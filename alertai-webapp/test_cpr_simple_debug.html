@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPR Simple Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .debug-box {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>CPR Simple Debug Test</h1>
+    
+    <div class="debug-box">
+        <h3>JavaScript Loading Test</h3>
+        <div id="js-status">Testing...</div>
+    </div>
+    
+    <div class="debug-box">
+        <h3>CPRMonitor Object Test</h3>
+        <div id="cpr-status">Testing...</div>
+    </div>
+    
+    <div class="debug-box">
+        <h3>Camera Support Test</h3>
+        <div id="camera-status">Testing...</div>
+    </div>
+    
+    <div class="debug-box">
+        <h3>Audio Support Test</h3>
+        <div id="audio-status">Testing...</div>
+    </div>
+    
+    <div class="debug-box">
+        <h3>Manual Tests</h3>
+        <button onclick="testCPRMonitor()">Test CPRMonitor Object</button>
+        <button onclick="testCamera()">Test Camera Access</button>
+        <button onclick="testAudio()">Test Audio Beep</button>
+        <div id="manual-results"></div>
+    </div>
+
+    <!-- Load the simple CPR monitor -->
+    <script src="cpr-posenet-monitor/cpr-monitor-simple.js"></script>
+
+    <script>
+        // Test JavaScript loading
+        document.getElementById('js-status').innerHTML = '<span class="success">✅ JavaScript loaded successfully</span>';
+        
+        // Test CPRMonitor object
+        setTimeout(() => {
+            if (typeof window.CPRMonitor === 'object') {
+                document.getElementById('cpr-status').innerHTML = '<span class="success">✅ CPRMonitor object found</span>';
+            } else {
+                document.getElementById('cpr-status').innerHTML = '<span class="error">❌ CPRMonitor object not found</span>';
+            }
+        }, 100);
+        
+        // Test camera support
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            document.getElementById('camera-status').innerHTML = '<span class="success">✅ Camera API supported</span>';
+        } else {
+            document.getElementById('camera-status').innerHTML = '<span class="error">❌ Camera API not supported</span>';
+        }
+        
+        // Test audio support
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) {
+                document.getElementById('audio-status').innerHTML = '<span class="success">✅ Audio API supported</span>';
+            } else {
+                document.getElementById('audio-status').innerHTML = '<span class="error">❌ Audio API not supported</span>';
+            }
+        } catch (error) {
+            document.getElementById('audio-status').innerHTML = '<span class="error">❌ Audio API error: ' + error.message + '</span>';
+        }
+        
+        // Manual test functions
+        function testCPRMonitor() {
+            const results = document.getElementById('manual-results');
+            
+            if (window.CPRMonitor) {
+                results.innerHTML += '<div class="success">✅ CPRMonitor object exists</div>';
+                
+                if (typeof window.CPRMonitor.show === 'function') {
+                    results.innerHTML += '<div class="success">✅ CPRMonitor.show() function exists</div>';
+                } else {
+                    results.innerHTML += '<div class="error">❌ CPRMonitor.show() function missing</div>';
+                }
+                
+                if (typeof window.CPRMonitor.debug === 'function') {
+                    results.innerHTML += '<div class="success">✅ CPRMonitor.debug() function exists</div>';
+                    window.CPRMonitor.debug();
+                } else {
+                    results.innerHTML += '<div class="error">❌ CPRMonitor.debug() function missing</div>';
+                }
+            } else {
+                results.innerHTML += '<div class="error">❌ CPRMonitor object not found</div>';
+            }
+        }
+        
+        async function testCamera() {
+            const results = document.getElementById('manual-results');
+            
+            try {
+                results.innerHTML += '<div class="info">🔍 Testing camera access...</div>';
+                
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "user" },
+                    audio: false
+                });
+                
+                results.innerHTML += '<div class="success">✅ Camera access granted</div>';
+                
+                // Stop the stream
+                stream.getTracks().forEach(track => track.stop());
+                
+            } catch (error) {
+                results.innerHTML += '<div class="error">❌ Camera access failed: ' + error.message + '</div>';
+            }
+        }
+        
+        function testAudio() {
+            const results = document.getElementById('manual-results');
+            
+            try {
+                results.innerHTML += '<div class="info">🔍 Testing audio beep...</div>';
+                
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const audioCtx = new AudioContext();
+                
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.1);
+                
+                results.innerHTML += '<div class="success">✅ Audio beep played successfully</div>';
+                
+            } catch (error) {
+                results.innerHTML += '<div class="error">❌ Audio beep failed: ' + error.message + '</div>';
+            }
+        }
+        
+        // Show user agent for debugging
+        document.body.innerHTML += '<div class="debug-box"><h3>Browser Info</h3><div class="info">User Agent: ' + navigator.userAgent + '</div></div>';
+    </script>
+</body>
+</html>

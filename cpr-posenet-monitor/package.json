@@ -1,0 +1,51 @@
+{
+  "name": "cpr-pose-detection-model",
+  "version": "1.0.0",
+  "description": "Real-time CPR compression detection using TensorFlow.js MoveNet pose estimation",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve . -p 8000",
+    "demo": "npx serve . -p 8000 --live",
+    "test": "echo 'Open index.html in browser to test model'"
+  },
+  "keywords": [
+    "pose-detection",
+    "tensorflow-js",
+    "movenet",
+    "cpr-detection",
+    "computer-vision",
+    "real-time-ai",
+    "healthcare-ai",
+    "decentralized-ai"
+  ],
+  "author": "Anwar9183",
+  "license": "MIT",
+  "model": {
+    "type": "pose-detection",
+    "framework": "tensorflow-js",
+    "architecture": "movenet-lightning",
+    "input": "video-stream",
+    "output": "compression-metrics",
+    "features": [
+      "live-compression-counting",
+      "cpm-rate-display",
+      "visual-guidance-overlays", 
+      "compression-detection-indicators"
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Anwar9183/cpr-pose-detection-model"
+  },
+  "bugs": {
+    "url": "https://github.com/Anwar9183/cpr-pose-detection-model/issues"
+  },
+  "homepage": "https://github.com/Anwar9183/cpr-pose-detection-model#readme"
+}
