@@ -1,6 +1,5 @@
 # AlertAI Git LFS Configuration
 # This file specifies which files should be stored using Git LFS
-
 # =============================================================================
 # MACHINE LEARNING MODELS
 # =============================================================================
@@ -15,17 +14,14 @@
 *.joblib filter=lfs diff=lfs merge=lfs -text
 *.model filter=lfs diff=lfs merge=lfs -text
 *.weights filter=lfs diff=lfs merge=lfs -text
-
 # TensorFlow models
 *.tflite filter=lfs diff=lfs merge=lfs -text
 *.tfrecord filter=lfs diff=lfs merge=lfs -text
 saved_model.pb filter=lfs diff=lfs merge=lfs -text
-
 # YOLO specific
 best.pt filter=lfs diff=lfs merge=lfs -text
 yolo*.pt filter=lfs diff=lfs merge=lfs -text
 *.engine filter=lfs diff=lfs merge=lfs -text
-
 # =============================================================================
 # DATASETS AND TRAINING DATA
 # =============================================================================
@@ -37,12 +33,10 @@ yolo*.pt filter=lfs diff=lfs merge=lfs -text
 *.npy filter=lfs diff=lfs merge=lfs -text
 *.npz filter=lfs diff=lfs merge=lfs -text
 *.mat filter=lfs diff=lfs merge=lfs -text
-
 # Large JSON files (datasets)
 *dataset*.json filter=lfs diff=lfs merge=lfs -text
 *training*.json filter=lfs diff=lfs merge=lfs -text
 *annotations*.json filter=lfs diff=lfs merge=lfs -text
-
 # =============================================================================
 # IMAGES AND MEDIA FILES
 # =============================================================================
@@ -57,13 +51,11 @@ yolo*.pt filter=lfs diff=lfs merge=lfs -text
 *.webp filter=lfs diff=lfs merge=lfs -text
 *.svg filter=lfs diff=lfs merge=lfs -text
 *.ico filter=lfs diff=lfs merge=lfs -text
-
 # Raw image formats
 *.raw filter=lfs diff=lfs merge=lfs -text
 *.cr2 filter=lfs diff=lfs merge=lfs -text
 *.nef filter=lfs diff=lfs merge=lfs -text
 *.arw filter=lfs diff=lfs merge=lfs -text
-
 # Videos
 *.mp4 filter=lfs diff=lfs merge=lfs -text
 *.avi filter=lfs diff=lfs merge=lfs -text
@@ -73,7 +65,6 @@ yolo*.pt filter=lfs diff=lfs merge=lfs -text
 *.webm filter=lfs diff=lfs merge=lfs -text
 *.mkv filter=lfs diff=lfs merge=lfs -text
 *.m4v filter=lfs diff=lfs merge=lfs -text
-
 # Audio
 *.mp3 filter=lfs diff=lfs merge=lfs -text
 *.wav filter=lfs diff=lfs merge=lfs -text
@@ -81,7 +72,6 @@ yolo*.pt filter=lfs diff=lfs merge=lfs -text
 *.aac filter=lfs diff=lfs merge=lfs -text
 *.ogg filter=lfs diff=lfs merge=lfs -text
 *.wma filter=lfs diff=lfs merge=lfs -text
-
 # =============================================================================
 # ARCHIVES AND COMPRESSED FILES
 # =============================================================================
@@ -98,7 +88,6 @@ yolo*.pt filter=lfs diff=lfs merge=lfs -text
 *.gz filter=lfs diff=lfs merge=lfs -text
 *.bz2 filter=lfs diff=lfs merge=lfs -text
 *.xz filter=lfs diff=lfs merge=lfs -text
-
 # =============================================================================
 # DATABASES
 # =============================================================================
@@ -107,7 +96,6 @@ yolo*.pt filter=lfs diff=lfs merge=lfs -text
 *.sqlite3 filter=lfs diff=lfs merge=lfs -text
 *.mdb filter=lfs diff=lfs merge=lfs -text
 *.accdb filter=lfs diff=lfs merge=lfs -text
-
 # =============================================================================
 # DOCUMENTS AND OFFICE FILES
 # =============================================================================
@@ -121,7 +109,6 @@ yolo*.pt filter=lfs diff=lfs merge=lfs -text
 *.odt filter=lfs diff=lfs merge=lfs -text
 *.ods filter=lfs diff=lfs merge=lfs -text
 *.odp filter=lfs diff=lfs merge=lfs -text
-
 # =============================================================================
 # EXECUTABLES AND BINARIES
 # =============================================================================
@@ -136,7 +123,6 @@ yolo*.pt filter=lfs diff=lfs merge=lfs -text
 *.dmg filter=lfs diff=lfs merge=lfs -text
 *.pkg filter=lfs diff=lfs merge=lfs -text
 *.bin filter=lfs diff=lfs merge=lfs -text
-
 # =============================================================================
 # FONTS
 # =============================================================================
@@ -145,7 +131,6 @@ yolo*.pt filter=lfs diff=lfs merge=lfs -text
 *.woff filter=lfs diff=lfs merge=lfs -text
 *.woff2 filter=lfs diff=lfs merge=lfs -text
 *.eot filter=lfs diff=lfs merge=lfs -text
-
 # =============================================================================
 # PROJECT-SPECIFIC LARGE FILES
 # =============================================================================
@@ -153,25 +138,20 @@ yolo*.pt filter=lfs diff=lfs merge=lfs -text
 fire_dataset/**/*.jpg filter=lfs diff=lfs merge=lfs -text
 fire_dataset/**/*.png filter=lfs diff=lfs merge=lfs -text
 fire_dataset/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
-
 # Test images
 test_images/**/*.jpg filter=lfs diff=lfs merge=lfs -text
 test_images/**/*.png filter=lfs diff=lfs merge=lfs -text
 test_images/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
-
 # Server test images
 server/test_images/**/*.jpg filter=lfs diff=lfs merge=lfs -text
 server/test_images/**/*.png filter=lfs diff=lfs merge=lfs -text
 server/test_images/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
-
 # Database files
 *.db filter=lfs diff=lfs merge=lfs -text
 db/*.db filter=lfs diff=lfs merge=lfs -text
 server/db/*.db filter=lfs diff=lfs merge=lfs -text
-
 # Log files (if large)
 *.log filter=lfs diff=lfs merge=lfs -text
-
 # =============================================================================
 # VIRTUAL ENVIRONMENTS (if included)
 # =============================================================================
@@ -180,23 +160,19 @@ venv/**/* filter=lfs diff=lfs merge=lfs -text
 env/**/* filter=lfs diff=lfs merge=lfs -text
 .venv/**/* filter=lfs diff=lfs merge=lfs -text
 server/venv/**/* filter=lfs diff=lfs merge=lfs -text
-
 # Node modules (if very large)
 node_modules/**/*.node filter=lfs diff=lfs merge=lfs -text
-
 # =============================================================================
 # CACHE AND TEMPORARY FILES
 # =============================================================================
 # Python cache
 **/__pycache__/**/*.pyc filter=lfs diff=lfs merge=lfs -text
 **/.pytest_cache/**/* filter=lfs diff=lfs merge=lfs -text
-
 # =============================================================================
 # SPECIAL CASES - FILES OVER CERTAIN SIZE
 # =============================================================================
 # Any file over 100MB should use LFS regardless of extension
 # (This is handled by Git LFS configuration, not .gitattributes)
-
 # =============================================================================
 # TEXT FILES THAT SHOULD NOT USE LFS
 # =============================================================================
@@ -226,13 +202,11 @@ LICENSE* text
 CHANGELOG* text
 *.rst text
 *.toml text
-
 # =============================================================================
 # CONFIGURATION
 # =============================================================================
 # Ensure line endings are handled correctly for text files
 * text=auto
-
 # Force binary treatment for certain files
 *.jpg binary
 *.png binary
