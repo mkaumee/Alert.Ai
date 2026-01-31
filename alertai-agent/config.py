@@ -23,7 +23,7 @@ class AlertAIAgentConfig:
     AGENT_VERSION = "1.0.0"
     
     # AI Model Configuration - ONLY use Railway environment variables
-    AI_MODEL = "gemini-3-flash"
+    AI_MODEL = "models/gemini-3-flash-preview"
     AI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
     GEMINI_API_KEY = AI_API_KEY  # Alias for backward compatibility
     

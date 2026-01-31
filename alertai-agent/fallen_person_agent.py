@@ -230,7 +230,7 @@ prompt = """{context_prompt}"""
 
 try:
     result = client.models.generate_content(
-        model='gemini-3-flash',
+        model='models/gemini-3-flash-preview',
         contents=[prompt]
     )
     print(result.text.strip())

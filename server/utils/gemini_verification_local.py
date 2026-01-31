@@ -120,7 +120,7 @@ Respond with ONLY "NO" if this is not an emergency, fake, unclear, or normal sit
 
 # Generate content
 response = client.models.generate_content(
-    model='gemini-3-flash',
+    model='models/gemini-3-flash-preview',
     contents=[prompt, temp_image]
 )
 
@@ -171,7 +171,7 @@ Respond with ONLY "NO" if this is not an emergency, fake, unclear, or normal sit
 
 # Generate content
 response = client.models.generate_content(
-    model='gemini-3-flash',
+    model='models/gemini-3-flash-preview',
     contents=[prompt, temp_image]
 )
 
