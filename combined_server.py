@@ -12,17 +12,12 @@ import os
 import sys
 from dotenv import load_dotenv, dotenv_values
 
-# Load environment variables from server/.env - prioritize .env file over system environment
+# Load environment variables from server/.env as fallback only
 server_env_path = os.path.join('server', '.env')
 load_dotenv(server_env_path)
 
-# Get values from server/.env file directly (prioritize .env over system env)
-server_env_values = dotenv_values(server_env_path)
-
-# Override system environment with .env file values for critical variables
-if server_env_values.get('GEMINI_API_KEY'):
-    os.environ['GEMINI_API_KEY'] = server_env_values['GEMINI_API_KEY']
-    print(f"🔑 Server using GEMINI_API_KEY from .env file: {server_env_values['GEMINI_API_KEY'][:20]}...")
+# ONLY use environment variables (Railway/system), no .env file override
+print(f"🔑 Using GEMINI_API_KEY from environment: {os.environ.get('GEMINI_API_KEY', 'NOT_FOUND')[:20]}...")
 
 # Import server utilities
 sys.path.append('server')
