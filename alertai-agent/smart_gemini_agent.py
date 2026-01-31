@@ -106,17 +106,18 @@ class SmartAlertAIAgent:
             
             # Create Python script for Gemini API call
             script_content = f'''
-import google.generativeai as genai
+import google.genai as genai
 
 api_key = "{self.api_key}"
-genai.configure(api_key=api_key)
-
-model = genai.GenerativeModel('gemini-3-flash')
+client = genai.Client(api_key=api_key)
 
 prompt = """{context_prompt}"""
 
 try:
-    result = model.generate_content(prompt)
+    result = client.models.generate_content(
+        model='gemini-3-flash',
+        contents=[prompt]
+    )
     print(result.text.strip())
 except Exception as e:
     print(f"ERROR: {{str(e)}}")

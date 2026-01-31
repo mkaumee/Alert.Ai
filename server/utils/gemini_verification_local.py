@@ -100,17 +100,14 @@ class GeminiVerifier:
             # Create Python script for local file analysis
             script_content = f'''
 import os
-import google.generativeai as genai
+import google.genai as genai
 
 # Configure API key
-genai.configure(api_key="{self.api_key}")
+api_key = "{self.api_key}"
+client = genai.Client(api_key=api_key)
 
-# Read local image file
-with open("{image_path}", "rb") as f:
-    image_data = f.read()
-
-# Create model
-model = genai.GenerativeModel('gemini-3-flash')
+# Upload image and generate content
+temp_image = genai.upload_file(path="{image_path}")
 
 # Create prompt
 prompt = """Analyze this image carefully. Is there a real {emergency_type} emergency happening?
@@ -121,10 +118,11 @@ Do not consider staged, fake, or unclear situations as emergencies.
 Respond with ONLY "YES" if this is clearly a real emergency requiring immediate response.
 Respond with ONLY "NO" if this is not an emergency, fake, unclear, or normal situation."""
 
-# Upload image and generate content
-import tempfile
-temp_image = genai.upload_file(path="{image_path}")
-response = model.generate_content([prompt, temp_image])
+# Generate content
+response = client.models.generate_content(
+    model='gemini-3-flash',
+    contents=[prompt, temp_image]
+)
 
 print(response.text.strip())
 '''
@@ -141,12 +139,13 @@ print(response.text.strip())
             # Create Python script for URL analysis
             script_content = f'''
 import requests
-import google.generativeai as genai
+import google.genai as genai
 import tempfile
 import os
 
 # Configure API key
-genai.configure(api_key="{self.api_key}")
+api_key = "{self.api_key}"
+client = genai.Client(api_key=api_key)
 
 # Download image
 response = requests.get("{image_url}", timeout=15)
@@ -158,8 +157,8 @@ with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as temp_file:
     temp_file.write(image_bytes)
     temp_path = temp_file.name
 
-# Create model
-model = genai.GenerativeModel('gemini-3-flash')
+# Upload image
+temp_image = genai.upload_file(path=temp_path)
 
 # Create prompt
 prompt = """Analyze this image carefully. Is there a real {emergency_type} emergency happening?
@@ -170,9 +169,11 @@ Do not consider staged, fake, or unclear situations as emergencies.
 Respond with ONLY "YES" if this is clearly a real emergency requiring immediate response.
 Respond with ONLY "NO" if this is not an emergency, fake, unclear, or normal situation."""
 
-# Upload image and generate content
-temp_image = genai.upload_file(path=temp_path)
-response = model.generate_content([prompt, temp_image])
+# Generate content
+response = client.models.generate_content(
+    model='gemini-3-flash',
+    contents=[prompt, temp_image]
+)
 
 # Clean up
 os.unlink(temp_path)

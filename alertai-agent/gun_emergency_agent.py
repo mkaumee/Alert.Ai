@@ -224,17 +224,18 @@ class GunEmergencyAgent:
             
             # Create Python script for Gemini API call
             script_content = '''
-import google.generativeai as genai
+import google.genai as genai
 
 api_key = "{api_key}"
-genai.configure(api_key=api_key)
-
-model = genai.GenerativeModel('gemini-3-flash')
+client = genai.Client(api_key=api_key)
 
 prompt = """{context_prompt}"""
 
 try:
-    result = model.generate_content(prompt)
+    result = client.models.generate_content(
+        model='gemini-3-flash',
+        contents=[prompt]
+    )
     print(result.text.strip())
 except Exception as e:
     print(f"GEMINI_ERROR: {{str(e)}}")
